@@ -244,8 +244,8 @@ export async function getDashboardSnapshot(): Promise<DashboardSnapshot> {
     queryLatestReading(),
     queryLatestDegradation(),
     queryVaccineBatch(),
-    queryAlertCounts("-7d"),
-    queryTemperatureHistory("-7d"),
+    queryAlertCounts("-30d"),
+    queryTemperatureHistory("-30d"),
   ]);
 
   const threshold = vaccine ? getVaccineById(vaccine.vaccineId) : undefined;
