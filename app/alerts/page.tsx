@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/page-header";
 import { AlertLog } from "@/components/alert-log";
+import { AlertEmailPanel } from "@/components/alert-email-panel";
 import { queryAlerts, queryAlertCounts } from "@/lib/influxdb";
 import { KpiCard } from "@/components/kpi-card";
 import { Bell, BellRing, AlertTriangle, Snowflake } from "lucide-react";
@@ -45,6 +46,34 @@ export default async function AlertsPage() {
           tone={counts.cold24h > 0 ? "warn" : "good"}
           icon={<Snowflake className="h-4 w-4" />}
         />
+      </div>
+
+      <div className="grid gap-4 xl:grid-cols-2">
+        <AlertEmailPanel />
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Delivery</CardTitle>
+            <CardDescription>How an alert reaches you</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm text-muted-foreground">
+            <p>
+              The ESP32 writes every violation to the <code className="font-mono text-xs">ALERT</code>{" "}
+              measurement in InfluxDB with a{" "}
+              <code className="font-mono text-xs">RESOLUTION_STATUS</code> of{" "}
+              <code className="font-mono text-xs">Unresolved</code>.
+            </p>
+            <p>
+              This page reads that measurement on demand, filters out anything already emailed, and
+              hands the rest to Resend. Nothing is sent twice, and a failed send stays queued for the
+              next attempt.
+            </p>
+            <p>
+              The same digest runs unattended from a cron hitting{" "}
+              <code className="font-mono text-xs">POST /api/alerts/email</code> — useful when the
+              dashboard is not open.
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
       <Card>
